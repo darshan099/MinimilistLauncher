@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="#000"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_panel"
+        sothree:umanoScrollableView="@+id/manageapplist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        tools:context=".MainActivity"
+        sothree:umanoPanelHeight="30dp"
+        sothree:umanoShadowHeight="5dp">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextClock
+                android:layout_width="match_parent"
+                android:textSize="50sp"
+                android:padding="20dp"
+                android:fontFamily="sans-serif"
+                android:layout_height="wrap_content"
+                android:format24Hour="true"
+                android:gravity="center"/>
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/favouriteListView"
+                android:paddingTop="50dp"
+                android:dividerHeight="10dp"
+                android:paddingLeft="20dp"
+                android:divider="#0000">
+            </ListView>
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/app_bottom_panel">
+            <include layout="@layout/sliding_panel_layout"/>
+
+        </RelativeLayout>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+</LinearLayout>
