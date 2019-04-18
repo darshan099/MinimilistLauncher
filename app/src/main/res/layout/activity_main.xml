@@ -42,8 +42,7 @@
         </LinearLayout>
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/app_bottom_panel">
+            android:layout_height="match_parent">
             <include layout="@layout/sliding_panel_layout"/>
 
         </RelativeLayout>

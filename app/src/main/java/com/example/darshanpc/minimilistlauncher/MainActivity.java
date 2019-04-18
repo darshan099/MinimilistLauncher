@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,8 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -31,16 +33,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener{
     ListView applistview,favouriteListView;
+    public static int colorvalue=-15485739;
     PackageManager manager;
     SlidingUpPanelLayout slidingPanelLayout;
     ImageButton slideuparrow;
     DatabaseHelper dbhelper;
     HashMap<String, String> apps = new HashMap<>();
-    TreeMap<String, String> sortedapps;
+    public static TreeMap<String, String> sortedapps;
     EditText searchapp;
-    List<String> appnames;
+    public static List<String> appnames;
     ArrayAdapter<String> appListAdapter,favouriteListAdapter;
 
     @Override
@@ -57,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
         dbhelper = new DatabaseHelper(this);
 
         getApps();
-
         addFavouriteList();
+        searchapp.setBackgroundColor(colorvalue);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (!preferences.getBoolean("firsttime", false)) {
@@ -73,11 +76,11 @@ public class MainActivity extends AppCompatActivity {
             builder.setMultiChoiceItems(temp_apps, null, new DialogInterface.OnMultiChoiceClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int which, boolean isChecked) {
-                    checked_apps[which]=true;
+                    checked_apps[which] = isChecked;
                 }
             });
             builder.setCancelable(false);
-            builder.setTitle("Enter 5 Favourite Apps");
+            builder.setTitle("Enter Favourite Apps");
             builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -87,12 +90,20 @@ public class MainActivity extends AppCompatActivity {
                         {
                             dbhelper.add_favourite_app(appnames.get(j),sortedapps.get(appnames.get(j)));
                         }
+
                     }
+                    addFavouriteList();
+                    favouriteListAdapter.notifyDataSetChanged();
+
+                    AlertDialog.Builder settingdialog=new AlertDialog.Builder(MainActivity.this);
+                    settingdialog.setMessage("Long press on any favourite app to enter settings");
+                    AlertDialog settingalert=settingdialog.create();
+                    settingalert.show();
                 }
             });
             AlertDialog dialog=builder.create();
             dialog.show();
-            addFavouriteList();
+
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("firsttime", true);
             editor.apply();
@@ -114,6 +125,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        favouriteListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent=new Intent(MainActivity.this,SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
         searchapp.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -171,8 +190,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void addFavouriteList()
     {
-        ArrayList favouritelist=dbhelper.get_favourite_app();
-        favouriteListAdapter=new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_list_item_1,favouritelist){
+        favouriteListAdapter=new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_list_item_1,dbhelper.get_favourite_app()){
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -183,5 +201,44 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         favouriteListView.setAdapter(favouriteListAdapter);
+    }
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+        Intent intent=new Intent(MainActivity.this,SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        searchapp.setBackgroundColor(colorvalue);
+        addFavouriteList();
+        favouriteListAdapter.notifyDataSetChanged();
     }
 }

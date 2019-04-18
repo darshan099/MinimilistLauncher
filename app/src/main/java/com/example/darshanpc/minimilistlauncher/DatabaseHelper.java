@@ -35,18 +35,24 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         contentValues.put("name",appname);
         contentValues.put("package",packagename);
         sql.insert("favourite",null,contentValues);
-        Log.i("added",appname);
-        Log.i("addpack", packagename);
+        Log.i("add",appname);
     }
     public ArrayList get_favourite_app()
     {
         SQLiteDatabase sql=this.getWritableDatabase();
-        ArrayList favouritelist=new ArrayList();
+        ArrayList favouritelistfromdb=new ArrayList();
         Cursor cursor=sql.rawQuery("SELECT * FROM  favourite",null);
         while (cursor.moveToNext())
         {
-            favouritelist.add(cursor.getString(0));
+            Log.i("app",cursor.getString(0));
+            favouritelistfromdb.add(cursor.getString(0));
         }
-        return favouritelist;
+        return favouritelistfromdb;
+    }
+    public void delete_favourite_app(String appname)
+    {
+        SQLiteDatabase sql=this.getWritableDatabase();
+        sql.execSQL("DELETE FROM favourite WHERE name='"+appname+"'");
+        Log.i("dele",appname);
     }
 }

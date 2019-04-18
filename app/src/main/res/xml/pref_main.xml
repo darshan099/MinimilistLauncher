@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <PreferenceCategory android:title="General">
+        <Preference
+            android:key="@string/key_edit_favourite"
+            android:summary="@string/summary_edit_favourite"
+            android:title="@string/title_edit_favourite" />
+        <Preference
+            android:key="@string/key_edit_color"
+            android:summary="@string/summary_edit_color"
+            android:title="@string/title_edit_color"/>
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="@string/pref_header_about">
+
+        <Preference
+            android:selectable="false"
+            android:summary="@string/summary_about" />
+
+    </PreferenceCategory>
+</PreferenceScreen>
